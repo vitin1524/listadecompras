@@ -43,6 +43,6 @@ body {
     border-radius: var(--raio);
     box-shadow: 0 8px 24px var(--cor-sombra);
     width: 100%;
-    max width: 400px;
+    max-width: 400px;
     text-align: center;
 }
