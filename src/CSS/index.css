@@ -58,7 +58,7 @@ button[onclick="logout()"] {
     align-self: flex-end;
     margin-bottom: 1.5rem;
     background-color: var(--cor-preto);
-    color: var(--cor-primeria-3);
+    color: var(--cor-primaria-3);
     padding: 10px 16px;
     border: none;
     border-radius: var(--cor-preto);
@@ -68,7 +68,7 @@ button[onclick="logout()"] {
 }
 
 button[onclick="logout()"] :hover {
-    background-color: var(--cor-primeria-2);
+    background-color: var(--cor-primaria-2);
 }
 
 #lista {
@@ -87,7 +87,7 @@ button[onclick="logout()"] :hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 6px var(--cor-primeria-1);
+    box-shadow: 0 2px 6px var(--cor-primaria-1);
 }
 
 #lista button {
@@ -113,14 +113,14 @@ button[onclick="logout()"] :hover {
 }
 
 #item:focus {
-    border: 1px solid var(--cor-primeria-1);
+    border: 1px solid var(--cor-primaria-1);
     outline: none;
-    box-shadow: 0 2px 6px var(--cor-primeria-1);
+    box-shadow: 0 2px 6px var(--cor-primaria-1);
 }
 
 button[onclick="adicionarItem()"] {
     padding: 12px 20px;
-    background-color: var(--cor-primeria-1);
+    background-color: var(--cor-primaria-1);
     color: var(--cor-bg);
     border: none;
     border-radius: var(--raio);
