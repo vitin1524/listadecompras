@@ -47,9 +47,10 @@ body {
     text-align: center;
 }
 #logo {
-    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
-    color: var(--cor-texto);
-    margin-bottom: 1.5re;
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: var(--raio);
 }
 
 .titulo {
@@ -62,11 +63,11 @@ body {
 button[onclick="logout()"] {
     align-self: flex-end;
     margin-bottom: 1.5rem;
-    background-color: var(--cor-preto);
-    color: var(--cor-primaria-3);
+    background-color: var(--cor-primaria-1);
+    color: var(--cor-branco);
     padding: 10px 16px;
     border: none;
-    border-radius: var(--cor-preto);
+    border-radius: var(--raio);
     cursor: pointer;
     font-weight: 500;
     transition: var(--transition);
@@ -80,7 +81,7 @@ button[onclick="logout()"] :hover {
     width: 100%;
     max-width: 600px;
     list-style: none;
-    margin-bottom: 32rem;
+    margin-bottom: 2rem;
     padding: 0;
 }
 
@@ -98,6 +99,7 @@ button[onclick="logout()"] :hover {
 #lista button {
     background-color: var(--cor-preto);
     color: var(--cor-bg);
+    border: none;
     border-radius: var(--raio);
     padding: 6px 12px;
     cursor: pointer;
@@ -112,7 +114,6 @@ button[onclick="logout()"] :hover {
     margin-bottom: 12px;
     border: 1px solid var(--cor-preto);
     border-radius: var(--raio);
-
     font-size: 1rem;
     transition: var(--transition);
 }
