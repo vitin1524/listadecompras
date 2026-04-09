@@ -2,9 +2,9 @@ const CACHE_NAME = 'lista-compras-v1';
 const urlsToCache = [
   '/',
   '/login.html',
-  '/src/css/login.css',
+  '/src/CSS/login.css',
   '/index.html',
-  '/src/css/index.css',
+  '/src/CSS/index.css',
   '/app.js',
   '/manifest.json',
   '/src/icons/icon-72x72.png',
