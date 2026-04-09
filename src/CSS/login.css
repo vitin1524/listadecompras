@@ -27,8 +27,8 @@
 
 body {
     font-family: var(--fonte);
-    background: #B7B6C1;
-    background: linear-gradient(90deg,rgba(183, 182, 193, 1) 0%, rgba(213, 207, 225, 1) 50%, rgba(237, 223, 239, 1) 100%);
+    background: #EA3788;
+    background: linear-gradient(90deg, rgba(234, 55, 136, 1) 0%, rgba(229, 107, 112, 1) 50%, rgba(243, 145, 160, 1) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +39,7 @@ body {
 
 .container {
     background: var(--cor-branco);
-    padding: clamp(2rem, 5vh, 3rem);
+    padding: clamp(2rem, 5vw, 3rem);
     border-radius: var(--raio);
     box-shadow: 0 8px 24px var(--cor-sombra);
     width: 100%;
@@ -74,7 +74,7 @@ input {
 input.focus {
     border-color: var(--cor-primaria-1);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(107, 114, 255, 0.952);
+    box-shadow: 0 0 0 3px rgba(181, 1, 181, 0.25);
 }
 
 .botoes {
@@ -93,7 +93,7 @@ button {
     background-color: var(--cor-primaria-2);
     color: var(--cor-branco);
     cursor: pointer;
-     transition: var(--transition);
+    transition: var(--transition);
 }
 
 button.hover {
@@ -101,11 +101,11 @@ button.hover {
 }
 
 @media (max-width:360px) {
-    .conatiner {
+    .container {
         padding: 1.5rem;
     }
 
     input, button {
-        font-size: 0.95;
+        font-size: 0.95rem;
     }
 }
