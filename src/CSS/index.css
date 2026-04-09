@@ -127,6 +127,9 @@ button[onclick="logout()"] :hover {
 
 button[onclick="adicionarItem()"] {
     padding: 12px 20px;
+    border-radius: var(--raio);
+    cursor: pointer;
+    font-weight: 500;
     background-color: var(--cor-primaria-1);
     color: var(--cor-bg);
     border: none;
