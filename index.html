@@ -1,25 +1,183 @@
 <!DOCTYPE html>
-<html lang="PT-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="src/icons/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="src/CSS/index.css">
-    
     <title>Lista 2026</title>
 </head>
 <body>
     <div class="container">
-        <h2 class="titulo">Lista de compras</h2>
-        <button onclick="logout()">Sair</button>
-        <ul id="lista">"lista"</ul>
-        <input type="text" id="item" placeholder="Novo Item">
-        <button onclick="adicionarItem()">Adicionar</button>
+        <div class="header">
+            <h2 class="titulo">Lista de compras</h2>
+            <button class="btn-sair" onclick="logout()">Sair</button>
+        </div>
+        
+        <!-- Contador de itens -->
+        <div class="contador" id="contador">
+            <span class="contador-numero" id="contadorNumero">0</span> 
+            <span class="contador-texto">itens na lista</span>
+        </div>
+        
+        <input type="text" id="item" class="input-item" placeholder="Digite o item e pressione Enter" autocomplete="off">
+        
+        <ul id="lista" class="lista-itens">
+            <!-- Itens serão inseridos aqui -->
+        </ul>
     </div>
 
-    <script type="module" src="app.js"></script>
     <script>
+        // Mapeamento de imagens realistas por palavra-chave
+        const imagensItens = {
+            'leite': '🥛',
+            'pão': '🍞',
+            'pao': '🍞',
+            'arroz': '🍚',
+            'feijão': '🫘',
+            'feijao': '🫘',
+            'carne': '🥩',
+            'frango': '🍗',
+            'peixe': '🐟',
+            'ovo': '🥚',
+            'ovos': '🥚',
+            'queijo': '🧀',
+            'presunto': '🥓',
+            'manteiga': '🧈',
+            'iogurte': '🍶',
+            'café': '☕',
+            'cafe': '☕',
+            'açúcar': '🍬',
+            'acucar': '🍬',
+            'sal': '🧂',
+            'óleo': '🫒',
+            'oleo': '🫒',
+            'macarrão': '🍝',
+            'macarrao': '🍝',
+            'molho': '🥫',
+            'tomate': '🍅',
+            'cebola': '🧅',
+            'alho': '🧄',
+            'batata': '🥔',
+            'cenoura': '🥕',
+            'alface': '🥬',
+            'banana': '🍌',
+            'maçã': '🍎',
+            'maca': '🍎',
+            'laranja': '🍊',
+            'uva': '🍇',
+            'morango': '🍓',
+            'abacaxi': '🍍',
+            'melancia': '🍉',
+            'biscoito': '🍪',
+            'bolacha': '🍪',
+            'chocolate': '🍫',
+            'sorvete': '🍦',
+            'água': '💧',
+            'agua': '💧',
+            'refrigerante': '🥤',
+            'cerveja': '🍺',
+            'vinho': '🍷',
+            'suco': '🧃',
+            'detergente': '🧴',
+            'sabão': '🧼',
+            'sabao': '🧼',
+            'sabonete': '🧼',
+            'shampoo': '🧴',
+            'papel higiênico': '🧻',
+            'papel higienico': '🧻',
+            'pasta de dente': '🪥',
+            'escova de dente': '🪥',
+            'amaciante': '🧴',
+            'água sanitária': '🧪',
+            'agua sanitaria': '🧪',
+            'ração': '🐾',
+            'racao': '🐾'
+        };
+
+        function getImagem(itemNome) {
+            const nomeLower = itemNome.toLowerCase().trim();
+            return imagensItens[nomeLower] || '🛒';
+        }
+
+        let ultimoItemAdicionado = '';
+        let ultimoTempoAdicao = 0;
+
+        function adicionarItem() {
+            const inputItem = document.getElementById('item');
+            const lista = document.getElementById('lista');
+            const nomeItem = inputItem.value.trim();
+            
+            // Se estiver vazio, não faz nada
+            if (nomeItem === '') return;
+            
+            // Evita duplicação: mesmo item em menos de 1 segundo
+            const agora = Date.now();
+            if (nomeItem === ultimoItemAdicionado && (agora - ultimoTempoAdicao) < 1000) {
+                return;
+            }
+            
+            const imagem = getImagem(nomeItem);
+            
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="item-info">
+                    <span class="item-imagem">${imagem}</span>
+                    <span class="item-nome">${nomeItem}</span>
+                </div>
+                <button class="btn-remover">🗑️</button>
+            `;
+            
+            // Adiciona evento de remover
+            li.querySelector('.btn-remover').addEventListener('click', function() {
+                removerItem(li);
+            });
+            
+            lista.appendChild(li);
+            
+            // Registra o último item adicionado
+            ultimoItemAdicionado = nomeItem;
+            ultimoTempoAdicao = agora;
+            
+            inputItem.value = '';
+            inputItem.focus();
+            
+            atualizarContador();
+        }
+
+        function removerItem(li) {
+            li.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                li.remove();
+                atualizarContador();
+            }, 250);
+        }
+
+        function atualizarContador() {
+            const lista = document.getElementById('lista');
+            const contadorNumero = document.getElementById('contadorNumero');
+            const totalItens = lista.children.length;
+            
+            contadorNumero.textContent = totalItens;
+            
+            contadorNumero.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                contadorNumero.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Evento Enter - única forma de adicionar
+        const inputItem = document.getElementById('item');
+        
+        inputItem.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                adicionarItem();
+            }
+        });
+
+        // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
@@ -32,6 +190,5 @@
             });
         }
     </script>
-    
 </body>
 </html>

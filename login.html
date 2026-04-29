@@ -1,40 +1,185 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista 2026 3º SIS</title>
-    <link rel="shortcut icon" href="src/img/favicon.ico" type="image/x-icon">
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="src/CSS/login.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+ <title>Lista 2026 • Login</title>
+ <link rel="shortcut icon" href="src/icons/favicon.ico" type="image/x-icon">
+ <link rel="manifest" href="manifest.json">
+ <link rel="stylesheet" href="src/CSS/login.css">
+ <!-- Phosphor Icons - Leve e profissional -->
+ <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-    <div class="container">
-        <img src="src/icons/icon-512x512.png" alt="logo" id="logo">
-        <h2 class="titulo">Login</h2>
-        <input type="email" id="email" placeholder="E-mail">
-        <input type="password" id="senha" placeholder="Senha">
-        
-        <div class="botoes">
-            <button onclick="login()">Entrar</button>
-            <button onclick="cadastro()">Cadastrar</button>
-        </div>
-    </div>
+ <!-- Elementos decorativos de fundo -->
+ <div class="bg-blob bg-blob-1"></div>
+ <div class="bg-blob bg-blob-2"></div>
 
-    <script type="module" src="auth.js"></script>
+ <div class="container">
+ <!-- Avatar/Logo Section -->
+ <div class="brand-section">
+ <div class="logo-wrapper">
+ <img src="src/icons/icon-512x512.png" alt="Lista 2026" id="logo">
+ </div>
+ <h1 class="titulo">Bem-vindo de volta</h1>
+ <p class="subtitulo">Organize suas compras de forma colaborativa</p>
+ </div>
 
-     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registrado com sucesso:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Falha ao registrar o ServiceWorker:', error);
-                    });
-            });
-        }
-    </script>
+ <!-- Formulário -->
+ <form id="loginForm" class="login-form">
+ <!-- Campo Email -->
+ <div class="input-group">
+ <label for="email" class="input-label">E-mail</label>
+ <div class="input-wrapper">
+ <i class="ph ph-envelope input-icon"></i>
+ <input 
+ type="email" 
+ id="email" 
+ name="email" 
+ placeholder="seu@email.com" 
+ autocomplete="email"
+ required
+ >
+ <i class="ph ph-check-circle input-validation-icon valid-icon"></i>
+ <i class="ph ph-warning-circle input-validation-icon error-icon"></i>
+ </div>
+ <span class="error-message" data-for="email"></span>
+ </div>
+
+ <!-- Campo Senha -->
+ <div class="input-group">
+ <label for="senha" class="input-label">Senha</label>
+ <div class="input-wrapper">
+ <i class="ph ph-lock input-icon"></i>
+ <input 
+ type="password" 
+ id="senha" 
+ name="senha" 
+ placeholder="••••••••" 
+ autocomplete="current-password"
+ required
+ >
+ <button 
+ type="button" 
+ class="toggle-password" 
+ aria-label="Mostrar senha"
+ >
+ <i class="ph ph-eye"></i>
+ </button>
+ <i class="ph ph-check-circle input-validation-icon valid-icon"></i>
+ </div>
+ <span class="error-message" data-for="senha"></span>
+ </div>
+
+ <!-- Link Esqueci senha -->
+ <a href="#" class="forgot-password">Esqueceu a senha?</a>
+
+ <!-- Botões de Ação -->
+ <div class="botoes">
+ <button type="submit" class="btn btn-primary" id="loginButton">
+ <span class="btn-text">Entrar</span>
+ <i class="ph ph-arrow-right btn-icon"></i>
+ <span class="loading-spinner"></span>
+ </button>
+ 
+ <div class="divider">
+ <span>ou</span>
+ </div>
+ 
+ <button type="button" class="btn btn-secondary" onclick="cadastro()">
+ Criar nova conta
+ <i class="ph ph-user-plus"></i>
+ </button>
+ </div>
+ </form>
+
+ <!-- Footer -->
+ <p class="footer-text">
+ Ao entrar, você concorda com nossos<br>
+ <a href="#">Termos de Uso</a> e <a href="#">Privacidade</a>
+ </p>
+ </div>
+
+ <script type="module" src="auth.js"></script>
+ <script>
+ // Toggle de visibilidade da senha
+ document.querySelector('.toggle-password').addEventListener('click', function() {
+ const passwordInput = document.getElementById('senha');
+ const icon = this.querySelector('i');
+ 
+ if (passwordInput.type === 'password') {
+ passwordInput.type = 'text';
+ icon.classList.remove('ph-eye');
+ icon.classList.add('ph-eye-slash');
+ } else {
+ passwordInput.type = 'password';
+ icon.classList.remove('ph-eye-slash');
+ icon.classList.add('ph-eye');
+ }
+ });
+
+ // Validação visual em tempo real
+ const emailInput = document.getElementById('email');
+ const senhaInput = document.getElementById('senha');
+
+ function validateEmail(email) {
+ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+ }
+
+ emailInput.addEventListener('input', function() {
+ const wrapper = this.closest('.input-wrapper');
+ if (this.value.length > 0) {
+ if (validateEmail(this.value)) {
+ wrapper.classList.add('valid');
+ wrapper.classList.remove('invalid');
+ } else {
+ wrapper.classList.add('invalid');
+ wrapper.classList.remove('valid');
+ }
+ } else {
+ wrapper.classList.remove('valid', 'invalid');
+ }
+ });
+
+ senhaInput.addEventListener('input', function() {
+ const wrapper = this.closest('.input-wrapper');
+ if (this.value.length > 0) {
+ wrapper.classList.add('valid');
+ wrapper.classList.remove('invalid');
+ } else {
+ wrapper.classList.remove('valid', 'invalid');
+ }
+ });
+
+ // Loading state no submit
+ document.getElementById('loginForm').addEventListener('submit', function(e) {
+ e.preventDefault();
+ const button = document.getElementById('loginButton');
+ 
+ // Simular loading
+ button.classList.add('loading');
+ 
+ // Aqui você chamaria sua função real de login
+ setTimeout(() => {
+ if (typeof login === 'function') {
+ login();
+ }
+ button.classList.remove('loading');
+ }, 1500);
+ });
+
+ // Service Worker
+ if ('serviceWorker' in navigator) {
+ window.addEventListener('load', () => {
+ navigator.serviceWorker.register('/service-worker.js')
+ .then(registration => {
+ console.log('✅ ServiceWorker registrado:', registration.scope);
+ })
+ .catch(error => {
+ console.log('❌ Falha no ServiceWorker:', error);
+ });
+ });
+ }
+ </script>
 </body>
 </html>
