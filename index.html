@@ -12,7 +12,10 @@
     <div class="container">
         <div class="header">
             <h2 class="titulo">Lista de compras</h2>
-            <button class="btn-sair" id="btnSair">Sair</button>
+            <div class="header-botoes">
+                <button class="btn-limpar" id="btnLimparTudo">🧹 Limpar tudo</button>
+                <button class="btn-sair" id="btnSair">Sair</button>
+            </div>
         </div>
         
         <!-- Contador de itens -->
@@ -102,6 +105,7 @@
         const lista = document.getElementById('lista');
         const contadorNumero = document.getElementById('contadorNumero');
         const btnSair = document.getElementById('btnSair');
+        const btnLimparTudo = document.getElementById('btnLimparTudo');
 
         // ============ FUNÇÕES ============
         function getImagem(itemNome) {
@@ -110,7 +114,6 @@
         }
 
         function adicionarItem() {
-            // Bloqueia completamente se já estiver processando
             if (processando) {
                 return;
             }
@@ -121,7 +124,6 @@
                 return;
             }
 
-            // Ativa o bloqueio ANTES de qualquer coisa
             processando = true;
 
             const imagem = getImagem(nomeItem);
@@ -130,10 +132,38 @@
             li.innerHTML = `
                 <div class="item-info">
                     <span class="item-imagem">${imagem}</span>
-                    <span class="item-nome">${nomeItem}</span>
+                    <div class="item-detalhes">
+                        <span class="item-nome">${nomeItem}</span>
+                        <div class="quantidade-controle">
+                            <button class="qtd-btn qtd-menos">−</button>
+                            <span class="qtd-valor">1</span>
+                            <button class="qtd-btn qtd-mais">+</button>
+                        </div>
+                    </div>
                 </div>
                 <button class="btn-remover">🗑️</button>
             `;
+            
+            // Eventos dos botões de quantidade
+            const qtdValor = li.querySelector('.qtd-valor');
+            const qtdMenos = li.querySelector('.qtd-menos');
+            const qtdMais = li.querySelector('.qtd-mais');
+            
+            qtdMenos.addEventListener('click', function() {
+                let qtd = parseInt(qtdValor.textContent);
+                if (qtd > 1) {
+                    qtd--;
+                    qtdValor.textContent = qtd;
+                }
+            });
+            
+            qtdMais.addEventListener('click', function() {
+                let qtd = parseInt(qtdValor.textContent);
+                if (qtd < 99) {
+                    qtd++;
+                    qtdValor.textContent = qtd;
+                }
+            });
             
             // Evento de remover
             li.querySelector('.btn-remover').addEventListener('click', function() {
@@ -146,18 +176,34 @@
             
             lista.appendChild(li);
             
-            // Limpa o campo
             inputItem.value = '';
             
             atualizarContador();
             
-            // Mantém o foco no input
             inputItem.focus();
             
-            // Libera o bloqueio após um tempo seguro
             setTimeout(() => {
                 processando = false;
             }, 500);
+        }
+
+        function limparTudo() {
+            if (lista.children.length === 0) return;
+            
+            if (confirm('Tem certeza que deseja remover TODOS os itens da lista?')) {
+                const itens = lista.querySelectorAll('li');
+                itens.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            item.remove();
+                            if (index === itens.length - 1) {
+                                atualizarContador();
+                            }
+                        }, 250);
+                    }, index * 100);
+                });
+            }
         }
 
         function atualizarContador() {
@@ -178,7 +224,6 @@
 
         // ============ EVENTOS ============
         
-        // Evento Enter no input - ÚNICO local que chama adicionarItem
         inputItem.addEventListener('keydown', function(evento) {
             if (evento.key === 'Enter') {
                 evento.preventDefault();
@@ -187,7 +232,6 @@
             }
         });
 
-        // Previne qualquer outro evento de tecla no input
         inputItem.addEventListener('keyup', function(evento) {
             if (evento.key === 'Enter') {
                 evento.preventDefault();
@@ -195,7 +239,6 @@
             }
         });
 
-        // Previne o evento keypress (pode causar duplicação)
         inputItem.addEventListener('keypress', function(evento) {
             if (evento.key === 'Enter') {
                 evento.preventDefault();
@@ -203,13 +246,16 @@
             }
         });
 
-        // Evento do botão Sair
         btnSair.addEventListener('click', function() {
             if (typeof logout === 'function') {
                 logout();
             } else {
                 fazerLogout();
             }
+        });
+
+        btnLimparTudo.addEventListener('click', function() {
+            limparTudo();
         });
 
         // ============ SERVICE WORKER ============
