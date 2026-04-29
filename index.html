@@ -28,9 +28,8 @@
         </ul>
     </div>
 
-    <script type="module" src="app.js"></script>
     <script>
-        // Mapeamento de imagens realistas por palavra-chave
+        // ============ CONFIGURAÇÃO ============
         const imagensItens = {
             'leite': '🥛',
             'pão': '🍞',
@@ -97,26 +96,34 @@
             'racao': '🐾'
         };
 
+        // ============ VARIÁVEIS DE CONTROLE ============
+        let processando = false;
+        const inputItem = document.getElementById('item');
+        const lista = document.getElementById('lista');
+        const contadorNumero = document.getElementById('contadorNumero');
+        const btnSair = document.getElementById('btnSair');
+
+        // ============ FUNÇÕES ============
         function getImagem(itemNome) {
             const nomeLower = itemNome.toLowerCase().trim();
             return imagensItens[nomeLower] || '🛒';
         }
 
-        let ultimoItemAdicionado = '';
-        let ultimoTempoAdicao = 0;
-
         function adicionarItem() {
-            const inputItem = document.getElementById('item');
-            const lista = document.getElementById('lista');
-            const nomeItem = inputItem.value.trim();
-            
-            if (nomeItem === '') return;
-            
-            const agora = Date.now();
-            if (nomeItem === ultimoItemAdicionado && (agora - ultimoTempoAdicao) < 1000) {
+            // Bloqueia completamente se já estiver processando
+            if (processando) {
                 return;
             }
+
+            const nomeItem = inputItem.value.trim();
             
+            if (nomeItem === '') {
+                return;
+            }
+
+            // Ativa o bloqueio ANTES de qualquer coisa
+            processando = true;
+
             const imagem = getImagem(nomeItem);
             
             const li = document.createElement('li');
@@ -128,34 +135,33 @@
                 <button class="btn-remover">🗑️</button>
             `;
             
+            // Evento de remover
             li.querySelector('.btn-remover').addEventListener('click', function() {
-                removerItem(li);
+                li.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    li.remove();
+                    atualizarContador();
+                }, 250);
             });
             
             lista.appendChild(li);
             
-            ultimoItemAdicionado = nomeItem;
-            ultimoTempoAdicao = agora;
-            
+            // Limpa o campo
             inputItem.value = '';
-            inputItem.focus();
             
             atualizarContador();
-        }
-
-        function removerItem(li) {
-            li.style.animation = 'fadeOut 0.3s ease';
+            
+            // Mantém o foco no input
+            inputItem.focus();
+            
+            // Libera o bloqueio após um tempo seguro
             setTimeout(() => {
-                li.remove();
-                atualizarContador();
-            }, 250);
+                processando = false;
+            }, 500);
         }
 
         function atualizarContador() {
-            const lista = document.getElementById('lista');
-            const contadorNumero = document.getElementById('contadorNumero');
             const totalItens = lista.children.length;
-            
             contadorNumero.textContent = totalItens;
             
             contadorNumero.style.transform = 'scale(1.3)';
@@ -164,38 +170,49 @@
             }, 200);
         }
 
-        // Função de logout
         function fazerLogout() {
-            // Limpa os dados da sessão
             localStorage.removeItem('usuarioLogado');
             sessionStorage.clear();
-            
-            // Redireciona para a página de login
             window.location.href = 'login.html';
         }
 
-        // Evento Enter para adicionar item
-        const inputItem = document.getElementById('item');
+        // ============ EVENTOS ============
         
-        inputItem.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
+        // Evento Enter no input - ÚNICO local que chama adicionarItem
+        inputItem.addEventListener('keydown', function(evento) {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                evento.stopPropagation();
                 adicionarItem();
             }
         });
 
+        // Previne qualquer outro evento de tecla no input
+        inputItem.addEventListener('keyup', function(evento) {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                evento.stopPropagation();
+            }
+        });
+
+        // Previne o evento keypress (pode causar duplicação)
+        inputItem.addEventListener('keypress', function(evento) {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                evento.stopPropagation();
+            }
+        });
+
         // Evento do botão Sair
-        document.getElementById('btnSair').addEventListener('click', function() {
-            // Verifica se a função logout existe no módulo
+        btnSair.addEventListener('click', function() {
             if (typeof logout === 'function') {
                 logout();
             } else {
-                // Se não existir, usa a função local
                 fazerLogout();
             }
         });
 
-        // Service Worker
+        // ============ SERVICE WORKER ============
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
