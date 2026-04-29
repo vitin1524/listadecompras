@@ -12,7 +12,7 @@
     <div class="container">
         <div class="header">
             <h2 class="titulo">Lista de compras</h2>
-            <button class="btn-sair" onclick="logout()">Sair</button>
+            <button class="btn-sair" id="btnSair">Sair</button>
         </div>
         
         <!-- Contador de itens -->
@@ -28,6 +28,7 @@
         </ul>
     </div>
 
+    <script type="module" src="app.js"></script>
     <script>
         // Mapeamento de imagens realistas por palavra-chave
         const imagensItens = {
@@ -109,10 +110,8 @@
             const lista = document.getElementById('lista');
             const nomeItem = inputItem.value.trim();
             
-            // Se estiver vazio, não faz nada
             if (nomeItem === '') return;
             
-            // Evita duplicação: mesmo item em menos de 1 segundo
             const agora = Date.now();
             if (nomeItem === ultimoItemAdicionado && (agora - ultimoTempoAdicao) < 1000) {
                 return;
@@ -129,14 +128,12 @@
                 <button class="btn-remover">🗑️</button>
             `;
             
-            // Adiciona evento de remover
             li.querySelector('.btn-remover').addEventListener('click', function() {
                 removerItem(li);
             });
             
             lista.appendChild(li);
             
-            // Registra o último item adicionado
             ultimoItemAdicionado = nomeItem;
             ultimoTempoAdicao = agora;
             
@@ -167,13 +164,34 @@
             }, 200);
         }
 
-        // Evento Enter - única forma de adicionar
+        // Função de logout
+        function fazerLogout() {
+            // Limpa os dados da sessão
+            localStorage.removeItem('usuarioLogado');
+            sessionStorage.clear();
+            
+            // Redireciona para a página de login
+            window.location.href = 'login.html';
+        }
+
+        // Evento Enter para adicionar item
         const inputItem = document.getElementById('item');
         
         inputItem.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 adicionarItem();
+            }
+        });
+
+        // Evento do botão Sair
+        document.getElementById('btnSair').addEventListener('click', function() {
+            // Verifica se a função logout existe no módulo
+            if (typeof logout === 'function') {
+                logout();
+            } else {
+                // Se não existir, usa a função local
+                fazerLogout();
             }
         });
 
